@@ -1,8 +1,8 @@
-import React, { useState, useRef, useCallback } from 'react';
+import React, { useState, useRef, useCallback, useEffect } from 'react';
 import { 
   BackArrowIcon, RobotIcon, BoltIcon, DiamondIcon, XRayIcon, HandshakeIcon, 
   MicIcon, ChartIcon, SparklesIcon, LightbulbIcon, TargetIcon, RedXIcon, ArrowRightIcon,
-  DocumentIcon, WarningTriangleIcon, ChatBubbleIcon, SadEmojiIcon, AlertIcon, UpArrowIcon
+  DocumentIcon, WarningTriangleIcon, ChatBubbleIcon, SadEmojiIcon, AlertIcon, UpArrowIcon, CloseIcon
 } from './components/Icons';
 import InfoCard from './components/InfoCard';
 import FeatureCard from './components/FeatureCard';
@@ -587,17 +587,200 @@ const RelationshipAutopilotPage: React.FC<{ onNavigate: (page: string) => void }
   );
 };
 
+const DRAFT_RESPONSE_TEXT = `Hey Alex,
+
+I really appreciate you asking—it shows the exact growth mindset we look for. Based on your interview and our current needs, here's what would make you incredibly competitive:
+
+1. Kubernetes & container orchestration - You have strong backend fundamentals, but most of our roles now require K8s experience. Even a personal project deploying a simple app would demonstrate this.
+
+2. System design at scale - Your experience is solid, but we're looking for someone who's architected systems handling 100M+ requests/day. Consider diving deeper into distributed systems patterns.
+
+3. Mentorship/leadership signals - For senior roles, we want to see how you've helped level up your teammates.
+
+Let me know if this helps, and I'll definitely keep you in mind for future roles where your distributed systems skills are a primary match.
+
+Best,
+The Team`;
+
+const DraftResponseModal = ({ candidate, onClose }) => {
+  return (
+    <div 
+      className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4 animate-fade-in-fast"
+      onClick={onClose}
+    >
+      <div 
+        className="bg-[#2a2a2a] rounded-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto flex flex-col border border-gray-700 shadow-2xl shadow-black/50"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <header className="flex items-center justify-between p-6 border-b border-gray-700 sticky top-0 bg-[#2a2a2a]/80 backdrop-blur-sm z-10">
+          <h2 className="text-2xl font-bold">Draft Response to {candidate.name}</h2>
+          <button onClick={onClose} className="text-gray-400 hover:text-white transition-colors">
+            <CloseIcon className="w-6 h-6" />
+          </button>
+        </header>
+        
+        <div className="p-8 flex-grow space-y-8">
+          {/* Candidate Context */}
+          <section className="bg-[#222] p-6 rounded-xl border border-gray-800">
+            <div className="flex items-start gap-4">
+              <div className="flex-shrink-0 w-12 h-12 rounded-full bg-gray-700 flex items-center justify-center font-bold text-xl">{candidate.initials}</div>
+              <div className="flex-grow">
+                <h3 className="font-bold text-lg">{candidate.name}</h3>
+                <p className="text-sm text-gray-400">{candidate.title} &bull; Applied 2 weeks ago</p>
+                <div className="mt-3">
+                  <p className="text-sm font-semibold text-gray-300 mb-1">His Question:</p>
+                  <blockquote className="border-l-4 border-rose-500 pl-3">
+                    <p className="text-gray-300 italic">{candidate.insight.match(/'([^']*)'/)?.[1]}</p>
+                  </blockquote>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* AI-Generated Response */}
+          <section>
+            <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center gap-2">
+                    <SparklesIcon className="w-6 h-6 text-yellow-400" />
+                    <h3 className="text-xl font-bold">AI-Generated Response</h3>
+                </div>
+                <span className="text-xs font-semibold bg-gray-700 text-gray-300 px-3 py-1 rounded-full">Personalized</span>
+            </div>
+            <textarea
+              className="w-full h-64 p-4 bg-[#222] border border-gray-700 rounded-lg resize-y text-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+              defaultValue={DRAFT_RESPONSE_TEXT}
+            ></textarea>
+          </section>
+
+           {/* Action Buttons */}
+          <section className="flex flex-wrap items-center justify-start gap-4">
+            <button className="px-5 py-2.5 font-semibold bg-white text-black rounded-lg hover:bg-gray-200 transition-colors">Send This Response</button>
+            <button className="px-5 py-2.5 font-semibold border-2 border-gray-600 rounded-lg hover:bg-gray-700 hover:border-gray-500 transition-colors">Edit Draft</button>
+            <button className="px-5 py-2.5 font-semibold text-gray-400 hover:text-white hover:bg-gray-800 rounded-lg transition-colors">See Alternative Tones</button>
+          </section>
+
+          {/* Why This Works */}
+          <section className="bg-[#222] p-6 rounded-xl border border-gray-800">
+            <div className="flex items-center gap-3 mb-4">
+              <TargetIcon className="w-6 h-6" />
+              <h3 className="text-xl font-bold">Why This Works</h3>
+            </div>
+            <ul className="text-gray-400 space-y-2 list-disc list-inside">
+              <li>Acknowledges his growth mindset (builds relationship)</li>
+              <li>Gives specific, actionable feedback (actually helpful)</li>
+              <li>References his actual work (shows you paid attention)</li>
+              <li>Offers value-add invitation (keeps relationship warm)</li>
+            </ul>
+          </section>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const AIPrepBriefModal = ({ candidate, onClose }) => {
+  return (
+    <div 
+      className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4 animate-fade-in-fast"
+      onClick={onClose}
+    >
+      <div 
+        className="bg-[#2a2a2a] rounded-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto flex flex-col border border-gray-700 shadow-2xl shadow-black/50"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <header className="flex items-start justify-between p-6 border-b border-gray-700 bg-[#222]/80 backdrop-blur-sm">
+          <div className="flex items-center gap-5">
+            <div className="flex-shrink-0 w-16 h-16 rounded-full bg-purple-700 flex items-center justify-center font-bold text-2xl">{candidate.initials}</div>
+            <div className="flex-grow">
+              <h2 className="text-3xl font-bold">{candidate.name}</h2>
+              <p className="text-md text-gray-400">{candidate.title}</p>
+              <p className="text-sm text-gray-500 mt-1">&bull; Interview Tomorrow at 2:00 PM</p>
+              <div className="flex flex-wrap gap-2 mt-3">
+                <span className="text-xs font-bold bg-green-500 text-white px-3 py-1 rounded-full">High Value Candidate</span>
+                <span className="text-xs font-bold bg-purple-500 text-white px-3 py-1 rounded-full">Culture Fit: 92%</span>
+                <span className="text-xs font-bold bg-gray-200 text-black px-3 py-1 rounded-full">Skills Match: 88%</span>
+              </div>
+            </div>
+          </div>
+          <button onClick={onClose} className="text-gray-400 hover:text-white transition-colors">
+            <CloseIcon className="w-6 h-6" />
+          </button>
+        </header>
+
+        <div className="p-8 flex-grow space-y-8">
+          {/* Two-Column Analysis */}
+          <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="bg-[#222] p-6 rounded-xl border border-gray-800">
+              <div className="flex items-center gap-2 mb-3">
+                <SparklesIcon className="w-6 h-6 text-yellow-400" />
+                <h3 className="text-lg font-bold">Why She's Special</h3>
+              </div>
+              <ul className="text-gray-400 space-y-2 list-disc list-inside">
+                <li>Led design system overhaul at Series B startup</li>
+                <li>Strong user research background (rare combo)</li>
+                <li>Active design community contributor</li>
+                <li>Mentors junior designers regularly</li>
+              </ul>
+            </div>
+            <div className="bg-[#222] p-6 rounded-xl border border-gray-800">
+               <div className="flex items-center gap-2 mb-3">
+                <WarningTriangleIcon className="w-6 h-6 text-yellow-500" />
+                <h3 className="text-lg font-bold">Potential Concerns</h3>
+              </div>
+              <ul className="text-gray-400 space-y-2 list-disc list-inside">
+                <li>Interviewing at 2 other companies (Figma, Airbnb)</li>
+                <li>May have comp expectations above range</li>
+                <li>Values remote flexibility highly</li>
+                <li>Looking for impact-driven work</li>
+              </ul>
+            </div>
+          </section>
+
+          {/* Suggested Topics */}
+          <section>
+             <div className="flex items-center gap-3 mb-4">
+                <ChatBubbleIcon className="w-6 h-6" />
+                <h3 className="text-xl font-bold">Suggested Pre-Interview Call Topics</h3>
+              </div>
+              <div className="space-y-6">
+                <div>
+                    <p className="font-bold text-lg mb-1"><span className="mr-2">1.</span>Build Excitement About Impact</p>
+                    <p className="text-gray-400 ml-6">She left her last role because she felt like 'just making buttons prettier.' Emphasize how our design team drives product strategy and user research directly influences roadmap.</p>
+                </div>
+                <div>
+                    <p className="font-bold text-lg mb-1"><span className="mr-2">2.</span>Address Remote Flexibility</p>
+                    <p className="text-gray-400 ml-6">Proactively mention our hybrid policy (3 days remote). Don't wait for her to ask. Show we understand modern work expectations.</p>
+                </div>
+                <div>
+                    <p className="font-bold text-lg mb-1"><span className="mr-2">3.</span>Name-Drop Team Culture</p>
+                    <p className="text-gray-400 ml-6">Mention Sarah (senior designer) also came from a startup background. Offer to connect them for coffee chat. Shows investment in her success.</p>
+                </div>
+                 <div>
+                    <p className="font-bold text-lg mb-1"><span className="mr-2">4.</span>Set Expectations for Interview</p>
+                    <p className="text-gray-400 ml-6">Walk through format, who she'll meet, what to prepare. Reduces anxiety and shows you care about her experience.</p>
+                </div>
+              </div>
+          </section>
+        </div>
+        <footer className="flex items-center justify-end gap-4 p-6 border-t border-gray-700 bg-[#222]/80">
+            <button className="px-5 py-2.5 font-semibold text-gray-400 hover:text-white hover:bg-gray-800 rounded-lg transition-colors">Email This Brief</button>
+            <button onClick={onClose} className="px-5 py-2.5 font-semibold bg-white text-black rounded-lg hover:bg-gray-200 transition-colors">Got It</button>
+        </footer>
+      </div>
+    </div>
+  );
+};
+
+
 const RelationshipAutopilotDashboardPage: React.FC<AppNavProps> = ({ onNavigate }) => {
   const [activeTab, setActiveTab] = useState('needs-attention');
-
-  const getTabClass = (tabName: string) => {
-    return activeTab === tabName
-      ? 'text-white font-bold border-b-2 border-white'
-      : 'text-gray-400 hover:text-white transition-colors';
-  };
+  const [isDraftModalOpen, setIsDraftModalOpen] = useState(false);
+  const [isPrepBriefModalOpen, setIsPrepBriefModalOpen] = useState(false);
+  const [selectedCandidate, setSelectedCandidate] = useState(null);
 
   const candidateCards = [
     {
+      id: 1,
       initials: 'AC',
       name: 'Alex Chen',
       title: 'Senior Backend Engineer',
@@ -607,6 +790,7 @@ const RelationshipAutopilotDashboardPage: React.FC<AppNavProps> = ({ onNavigate 
       statusColor: 'bg-red-500',
     },
     {
+      id: 2,
       initials: 'MR',
       name: 'Maya Rodriguez',
       title: 'Product Designer',
@@ -616,6 +800,7 @@ const RelationshipAutopilotDashboardPage: React.FC<AppNavProps> = ({ onNavigate 
       statusColor: 'bg-purple-500',
     },
     {
+      id: 3,
       initials: 'JK',
       name: 'James Kim',
       title: 'DevOps Engineer',
@@ -625,6 +810,7 @@ const RelationshipAutopilotDashboardPage: React.FC<AppNavProps> = ({ onNavigate 
       statusColor: 'bg-green-500',
     },
     {
+      id: 4,
       initials: 'SP',
       name: 'Sarah Patel',
       title: 'Engineering Manager',
@@ -635,101 +821,160 @@ const RelationshipAutopilotDashboardPage: React.FC<AppNavProps> = ({ onNavigate 
     },
   ];
 
+  const openDraftModal = (candidate) => {
+    setSelectedCandidate(candidate);
+    setIsDraftModalOpen(true);
+  };
+
+  const closeDraftModal = () => {
+    setIsDraftModalOpen(false);
+    setSelectedCandidate(null);
+  };
+  
+  const openPrepBriefModal = (candidate) => {
+    setSelectedCandidate(candidate);
+    setIsPrepBriefModalOpen(true);
+  };
+
+  const closePrepBriefModal = () => {
+    setIsPrepBriefModalOpen(false);
+    setSelectedCandidate(null);
+  };
+  
+  useEffect(() => {
+    const handleEsc = (event) => {
+      if (event.keyCode === 27) {
+        if (isDraftModalOpen) closeDraftModal();
+        if (isPrepBriefModalOpen) closePrepBriefModal();
+      }
+    };
+    window.addEventListener('keydown', handleEsc);
+
+    return () => {
+      window.removeEventListener('keydown', handleEsc);
+    };
+  }, [isDraftModalOpen, isPrepBriefModalOpen]);
+
+  const handlePrimaryAction = (candidate) => {
+    const action = candidate.buttons[0];
+    if (action === 'Draft Response') {
+      openDraftModal(candidate);
+    } else if (action === 'Schedule Call' || action === 'Quick Check-In' || action === 'Reach Out') {
+      openPrepBriefModal(candidate);
+    }
+  };
+
+
+  const getTabClass = (tabName: string) => {
+    return activeTab === tabName
+      ? 'text-white font-bold border-b-2 border-white'
+      : 'text-gray-400 hover:text-white transition-colors';
+  };
+
   return (
-    <div className="container mx-auto px-6 md:px-12 py-12">
-      <button onClick={() => onNavigate('relationship-autopilot')} className="absolute top-8 left-8 text-gray-400 hover:text-white transition-colors z-10" aria-label="Go back to feature page">
-        <BackArrowIcon className="w-6 h-6" />
-      </button>
-
-      <header className="mb-12 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-        <div>
-          <h1 className="text-3xl md:text-4xl font-black tracking-tight mb-1">Relationship Autopilot Dashboard</h1>
-          <p className="text-md text-gray-400">AI managing 247 candidate relationships</p>
-        </div>
-        <button className="bg-green-500 text-white text-sm font-bold px-4 py-2 rounded-full hover:bg-green-400 transition-colors">
-          Live Demo
+    <>
+      <div className="container mx-auto px-6 md:px-12 py-12">
+        <button onClick={() => onNavigate('relationship-autopilot')} className="absolute top-8 left-8 text-gray-400 hover:text-white transition-colors z-10" aria-label="Go back to feature page">
+          <BackArrowIcon className="w-6 h-6" />
         </button>
-      </header>
 
-      <main className="flex flex-col gap-10">
-        {/* Metrics Dashboard */}
-        <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          <div className="bg-[#2a2a2a] border border-gray-800 rounded-xl p-6">
-            <p className="text-sm text-gray-400 uppercase font-semibold mb-2">Active Candidates</p>
-            <p className="text-5xl font-extrabold">247</p>
-            <p className="text-gray-500">AI managing</p>
+        <header className="mb-12 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+          <div>
+            <h1 className="text-3xl md:text-4xl font-black tracking-tight mb-1">Relationship Autopilot Dashboard</h1>
+            <p className="text-md text-gray-400">AI managing 247 candidate relationships</p>
           </div>
-          <div className="bg-[#2a2a2a] border border-gray-800 rounded-xl p-6">
-            <p className="text-sm text-gray-400 uppercase font-semibold mb-2">Auto-Updates Sent</p>
-            <p className="text-5xl font-extrabold">89</p>
-            <p className="text-gray-500">This week</p>
-          </div>
-          <div className="bg-[#2a2a2a] border border-gray-800 rounded-xl p-6">
-            <p className="text-sm text-gray-400 uppercase font-semibold mb-2">Needs Your Attention</p>
-            <p className="text-5xl font-extrabold">4</p>
-            <p className="text-gray-500">Human touch</p>
-          </div>
-          <div className="bg-[#2a2a2a] border border-gray-800 rounded-xl p-6">
-            <p className="text-sm text-gray-400 uppercase font-semibold mb-2">Response Rate</p>
-            <p className="text-5xl font-extrabold text-green-400">94%</p>
-            <p className="text-gray-500 flex items-center gap-1"><UpArrowIcon className="w-4 h-4 text-green-400" /> 28% vs manual</p>
-          </div>
-        </section>
+          <button className="bg-green-500 text-white text-sm font-bold px-4 py-2 rounded-full hover:bg-green-400 transition-colors">
+            Live Demo
+          </button>
+        </header>
 
-        {/* Tabs */}
-        <section>
-          <div className="border-b border-gray-700">
-            <nav className="-mb-px flex space-x-8" aria-label="Tabs">
-              <button onClick={() => setActiveTab('needs-attention')} className={`px-1 py-4 text-sm font-medium ${getTabClass('needs-attention')}`}>Needs Attention (4)</button>
-              <button onClick={() => setActiveTab('on-autopilot')} className={`px-1 py-4 text-sm font-medium ${getTabClass('on-autopilot')}`}>On Autopilot (243)</button>
-              <button onClick={() => setActiveTab('scheduled')} className={`px-1 py-4 text-sm font-medium ${getTabClass('scheduled')}`}>Scheduled (18)</button>
-            </nav>
-          </div>
-        </section>
+        <main className="flex flex-col gap-10">
+          {/* Metrics Dashboard */}
+          <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="bg-[#2a2a2a] border border-gray-800 rounded-xl p-6">
+              <p className="text-sm text-gray-400 uppercase font-semibold mb-2">Active Candidates</p>
+              <p className="text-5xl font-extrabold">247</p>
+              <p className="text-gray-500">AI managing</p>
+            </div>
+            <div className="bg-[#2a2a2a] border border-gray-800 rounded-xl p-6">
+              <p className="text-sm text-gray-400 uppercase font-semibold mb-2">Auto-Updates Sent</p>
+              <p className="text-5xl font-extrabold">89</p>
+              <p className="text-gray-500">This week</p>
+            </div>
+            <div className="bg-[#2a2a2a] border border-gray-800 rounded-xl p-6">
+              <p className="text-sm text-gray-400 uppercase font-semibold mb-2">Needs Your Attention</p>
+              <p className="text-5xl font-extrabold">4</p>
+              <p className="text-gray-500">Human touch</p>
+            </div>
+            <div className="bg-[#2a2a2a] border border-gray-800 rounded-xl p-6">
+              <p className="text-sm text-gray-400 uppercase font-semibold mb-2">Response Rate</p>
+              <p className="text-5xl font-extrabold text-green-400">94%</p>
+              <p className="text-gray-500 flex items-center gap-1"><UpArrowIcon className="w-4 h-4 text-green-400" /> 28% vs manual</p>
+            </div>
+          </section>
 
-        {/* Candidate Cards */}
-        {activeTab === 'needs-attention' && (
-          <section className="flex flex-col gap-6">
-            {candidateCards.map((card, index) => (
-              <div key={index} className="bg-[#2a2a2a] border border-gray-800 rounded-xl p-6 transition-all duration-300 hover:border-gray-600 hover:shadow-lg relative">
-                <div className="flex flex-col sm:flex-row items-start gap-6">
-                  <div className="flex-shrink-0 w-12 h-12 rounded-full bg-gray-700 flex items-center justify-center font-bold text-xl">
-                    {card.initials}
-                  </div>
-                  <div className="flex-grow">
-                    <h3 className="text-lg font-bold">{card.name}</h3>
-                    <p className="text-sm text-gray-400 mb-3">{card.title}</p>
-                    <p className="text-gray-300">{card.insight}</p>
-                    <div className="flex flex-wrap gap-3 mt-4">
-                      <button className="px-4 py-1.5 text-sm font-semibold bg-white text-black rounded-md hover:bg-gray-200 transition-colors">{card.buttons[0]}</button>
-                      <button className="px-4 py-1.5 text-sm font-semibold border border-gray-600 rounded-md hover:bg-gray-700 transition-colors">{card.buttons[1]}</button>
+          {/* Tabs */}
+          <section>
+            <div className="border-b border-gray-700">
+              <nav className="-mb-px flex space-x-8" aria-label="Tabs">
+                <button onClick={() => setActiveTab('needs-attention')} className={`px-1 py-4 text-sm font-medium ${getTabClass('needs-attention')}`}>Needs Attention (4)</button>
+                <button onClick={() => setActiveTab('on-autopilot')} className={`px-1 py-4 text-sm font-medium ${getTabClass('on-autopilot')}`}>On Autopilot (243)</button>
+                <button onClick={() => setActiveTab('scheduled')} className={`px-1 py-4 text-sm font-medium ${getTabClass('scheduled')}`}>Scheduled (18)</button>
+              </nav>
+            </div>
+          </section>
+
+          {/* Candidate Cards */}
+          {activeTab === 'needs-attention' && (
+            <section className="flex flex-col gap-6">
+              {candidateCards.map((card) => (
+                <div key={card.id} className="bg-[#2a2a2a] border border-gray-800 rounded-xl p-6 transition-all duration-300 hover:border-gray-600 hover:shadow-lg relative">
+                  <div className="flex flex-col sm:flex-row items-start gap-6">
+                    <div className="flex-shrink-0 w-12 h-12 rounded-full bg-gray-700 flex items-center justify-center font-bold text-xl">
+                      {card.initials}
+                    </div>
+                    <div className="flex-grow">
+                      <h3 className="text-lg font-bold">{card.name}</h3>
+                      <p className="text-sm text-gray-400 mb-3">{card.title}</p>
+                      <p className="text-gray-300">{card.insight}</p>
+                      <div className="flex flex-wrap gap-3 mt-4">
+                        <button 
+                          onClick={() => handlePrimaryAction(card)}
+                          className="px-4 py-1.5 text-sm font-semibold bg-white text-black rounded-md hover:bg-gray-200 transition-colors"
+                        >
+                          {card.buttons[0]}
+                        </button>
+                        <button className="px-4 py-1.5 text-sm font-semibold border border-gray-600 rounded-md hover:bg-gray-700 transition-colors">{card.buttons[1]}</button>
+                      </div>
                     </div>
                   </div>
+                  <div className={`absolute top-4 right-4 text-xs font-bold px-3 py-1 rounded-full ${card.statusColor}`}>{card.status}</div>
                 </div>
-                <div className={`absolute top-4 right-4 text-xs font-bold px-3 py-1 rounded-full ${card.statusColor}`}>{card.status}</div>
-              </div>
-            ))}
-          </section>
-        )}
+              ))}
+            </section>
+          )}
 
-        {/* What AI Is Doing Section */}
-        <section>
-          <div className="bg-[#2a2a2a] border border-gray-700 rounded-2xl p-8">
-             <div className="flex items-center gap-4 mb-6">
-                <TargetIcon className="w-8 h-8 flex-shrink-0" />
-                <h3 className="text-2xl font-bold">What AI Is Doing Right Now</h3>
-             </div>
-             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4 mb-6 text-gray-400">
-                <p>• Sending 12 interview reminder emails</p>
-                <p>• Updating 23 candidates on pipeline status</p>
-                <p>• Nurturing 47 'not now' relationships</p>
-                <p>• Monitoring 8 candidates for re-engagement signals</p>
-             </div>
-             <p className="text-center text-gray-500 mt-8">You spend 5 minutes on these 4 alerts. AI handles the other 243 relationships perfectly.</p>
-          </div>
-        </section>
-      </main>
-    </div>
+          {/* What AI Is Doing Section */}
+          <section>
+            <div className="bg-[#2a2a2a] border border-gray-700 rounded-2xl p-8">
+               <div className="flex items-center gap-4 mb-6">
+                  <TargetIcon className="w-8 h-8 flex-shrink-0" />
+                  <h3 className="text-2xl font-bold">What AI Is Doing Right Now</h3>
+               </div>
+               <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4 mb-6 text-gray-400">
+                  <p>• Sending 12 interview reminder emails</p>
+                  <p>• Updating 23 candidates on pipeline status</p>
+                  <p>• Nurturing 47 'not now' relationships</p>
+                  <p>• Monitoring 8 candidates for re-engagement signals</p>
+               </div>
+               <p className="text-center text-gray-500 mt-8">You spend 5 minutes on these 4 alerts. AI handles the other 243 relationships perfectly.</p>
+            </div>
+          </section>
+        </main>
+      </div>
+      {isDraftModalOpen && selectedCandidate && <DraftResponseModal candidate={selectedCandidate} onClose={closeDraftModal} />}
+      {isPrepBriefModalOpen && selectedCandidate && <AIPrepBriefModal candidate={selectedCandidate} onClose={closePrepBriefModal} />}
+    </>
   );
 };
 

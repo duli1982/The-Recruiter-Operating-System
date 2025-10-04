@@ -39,9 +39,9 @@ const CoreFeatureCard: React.FC<CoreFeatureCardProps> = ({ icon, title, descript
           <p className="text-gray-400 text-sm">{description}</p>
         </div>
         <div className="flex-shrink-0 mt-4 md:mt-0">
-          <button className={getButtonClasses(buttonColor)} onClick={onClick}>
+          <button className={`${getButtonClasses(buttonColor)} group`} onClick={onClick}>
             <span>Explore</span>
-            <ArrowRightIcon className="w-4 h-4 -rotate-45" />
+            <ArrowRightIcon className="w-4 h-4 -rotate-45 transition-transform duration-300 group-hover:rotate-0" />
           </button>
         </div>
       </div>
