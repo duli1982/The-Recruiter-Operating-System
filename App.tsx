@@ -2,11 +2,13 @@ import React, { useState, useRef, useCallback, useEffect } from 'react';
 import { 
   BackArrowIcon, RobotIcon, BoltIcon, DiamondIcon, XRayIcon, HandshakeIcon, 
   MicIcon, ChartIcon, SparklesIcon, LightbulbIcon, TargetIcon, RedXIcon, ArrowRightIcon,
-  DocumentIcon, WarningTriangleIcon, ChatBubbleIcon, SadEmojiIcon, AlertIcon, UpArrowIcon, CloseIcon
+  DocumentIcon, WarningTriangleIcon, ChatBubbleIcon, SadEmojiIcon, AlertIcon, UpArrowIcon, CloseIcon,
+  GradientChartIcon, ConfusedEmojiIcon, CrystalBallIcon
 } from './components/Icons';
 import InfoCard from './components/InfoCard';
 import FeatureCard from './components/FeatureCard';
 import CoreFeatureCard from './components/CoreFeatureCard';
+import ScrollToTopButton from './components/ScrollToTopButton';
 
 const HomePage: React.FC<{ onNavigate: (page: string) => void }> = ({ onNavigate }) => {
   return (
@@ -76,6 +78,7 @@ const HomePage: React.FC<{ onNavigate: (page: string) => void }> = ({ onNavigate
               title="Market Intelligence Oracle"
               description="Instant comp data, team movements, funding news, hiring trends. Walk into every hiring manager meeting as the smartest person about the market."
               buttonColor="purple"
+              onClick={() => onNavigate('market-intelligence-oracle')}
             />
             <CoreFeatureCard
               icon={<SparklesIcon className="w-10 h-10 text-yellow-300" />}
@@ -978,6 +981,267 @@ const RelationshipAutopilotDashboardPage: React.FC<AppNavProps> = ({ onNavigate 
   );
 };
 
+const MarketIntelligenceOraclePage: React.FC<{ onNavigate: (page: string) => void }> = ({ onNavigate }) => {
+  return (
+    <div className="container mx-auto px-6 md:px-12 py-12">
+      <button onClick={() => onNavigate('home')} className="absolute top-8 left-8 text-gray-400 hover:text-white transition-colors z-10" aria-label="Go back to homepage">
+        <BackArrowIcon className="w-6 h-6" />
+      </button>
+
+      <header className="mb-16 md:mb-24 text-center animate-fade-in flex flex-col items-center">
+        <GradientChartIcon className="w-20 h-20 mb-4" />
+        <h1 className="text-4xl md:text-6xl font-black tracking-tight mb-2">
+          Market Intelligence Oracle
+        </h1>
+        <p className="text-lg md:text-xl text-gray-400">
+          Be the smartest person in every meeting
+        </p>
+      </header>
+      
+      <main className="flex flex-col gap-16 md:gap-24">
+        <section>
+           <InfoCard 
+              title="The Problem" 
+              description="Hiring managers ask: 'What's market rate for this role?' 'Who's hiring similar talent?' 'What's competitive comp?' You scramble to find answers or give vague responses. Meanwhile, they're Googling and losing trust in your expertise."
+            />
+        </section>
+
+        <section className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <div className="bg-[#222222] border border-gray-800 rounded-2xl p-8 transition-all duration-300 hover:border-gray-700">
+            <ConfusedEmojiIcon className="w-8 h-8 text-gray-500 mb-4" />
+            <h3 className="text-xl font-bold mb-4">Without Intelligence</h3>
+            <ul className="text-gray-400 space-y-2">
+              <li className="flex items-start"><span className="text-gray-600 mr-2 mt-1">&#8226;</span>"Let me get back to you on that..."</li>
+              <li className="flex items-start"><span className="text-gray-600 mr-2 mt-1">&#8226;</span>Hours spent researching comp data</li>
+              <li className="flex items-start"><span className="text-gray-600 mr-2 mt-1">&#8226;</span>Outdated salary surveys</li>
+              <li className="flex items-start"><span className="text-gray-600 mr-2 mt-1">&#8226;</span>Miss market trends until too late</li>
+              <li className="flex items-start"><span className="text-gray-600 mr-2 mt-1">&#8226;</span>Hiring managers doubt your expertise</li>
+            </ul>
+          </div>
+          <div className="bg-[#2a2a2a] border border-gray-700 rounded-2xl p-8 transition-all duration-300 hover:border-purple-400/50 hover:shadow-lg hover:shadow-purple-500/10">
+            <CrystalBallIcon className="w-8 h-8 text-purple-400 mb-4" />
+            <h3 className="text-xl font-bold mb-4">With Oracle</h3>
+            <ul className="text-gray-400 space-y-2">
+              <li className="flex items-start"><span className="text-purple-400 mr-2 mt-1">&#8226;</span>Instant answers to any market question</li>
+              <li className="flex items-start"><span className="text-purple-400 mr-2 mt-1">&#8226;</span>Real-time comp data by role, level, location</li>
+              <li className="flex items-start"><span className="text-purple-400 mr-2 mt-1">&#8226;</span>Track competitor hiring moves</li>
+              <li className="flex items-start"><span className="text-purple-400 mr-2 mt-1">&#8226;</span>Predict talent availability trends</li>
+              <li className="flex items-start"><span className="text-purple-400 mr-2 mt-1">&#8226;</span>Become the trusted market expert</li>
+            </ul>
+          </div>
+        </section>
+        
+        <section>
+          <div className="text-center mb-12">
+            <hr className="border-t border-gray-700 w-24 mx-auto mb-4" />
+            <h2 className="text-sm font-bold text-gray-400 uppercase tracking-widest">HOW IT WORKS</h2>
+            <hr className="border-t border-gray-700 w-24 mx-auto mt-4" />
+          </div>
+          <div className="flex flex-col gap-8 max-w-3xl mx-auto">
+             <div className="flex items-start gap-6 bg-[#2a2a2a] p-6 rounded-xl border border-transparent hover:border-gray-700 transition-colors">
+              <div className="flex-shrink-0 w-8 h-8 rounded-full bg-purple-600 text-white font-bold flex items-center justify-center">1</div>
+              <div>
+                <h3 className="font-bold text-lg mb-1">Real-Time Data Aggregation</h3>
+                <p className="text-gray-400">AI continuously crawls job boards, offer data, LinkedIn moves, funding announcements, glassdoor reviews. Always current, never stale.</p>
+              </div>
+            </div>
+            <div className="flex items-start gap-6 bg-[#2a2a2a] p-6 rounded-xl border border-transparent hover:border-gray-700 transition-colors">
+               <div className="flex-shrink-0 w-8 h-8 rounded-full bg-white text-black font-bold flex items-center justify-center">2</div>
+              <div>
+                <h3 className="font-bold text-lg mb-1">Competitive Intelligence</h3>
+                <p className="text-gray-400">Track which companies are hiring for similar roles, what they're offering, who they just hired. Know your competition better than they know themselves.</p>
+              </div>
+            </div>
+             <div className="flex items-start gap-6 bg-[#2a2a2a] p-6 rounded-xl border border-transparent hover:border-gray-700 transition-colors">
+              <div className="flex-shrink-0 w-8 h-8 rounded-full bg-white text-black font-bold flex items-center justify-center">3</div>
+              <div>
+                <h3 className="font-bold text-lg mb-1">Instant Answers</h3>
+                <p className="text-gray-400">Ask anything: 'What's competitive comp for Staff Engineer in Austin?' Get precise answer in seconds with sources and confidence intervals.</p>
+              </div>
+            </div>
+            <div className="flex items-start gap-6 bg-[#2a2a2a] p-6 rounded-xl border border-transparent hover:border-gray-700 transition-colors">
+              <div className="flex-shrink-0 w-8 h-8 rounded-full bg-rose-500 text-white font-bold flex items-center justify-center">4</div>
+              <div>
+                <h3 className="font-bold text-lg mb-1">Proactive Alerts</h3>
+                <p className="text-gray-400">AI notifies you: 'Competitor just raised $50M, expect hiring surge' or 'Senior designers now commanding 15% more than last quarter.'</p>
+              </div>
+            </div>
+          </div>
+           <div className="text-center mt-12">
+            <button 
+              onClick={() => onNavigate('market-intelligence-oracle-dashboard')}
+              className="inline-flex items-center justify-center gap-2 px-6 py-3 font-semibold rounded-lg transition-all duration-300 transform hover:scale-105 shadow-md bg-purple-600 text-white hover:bg-purple-500 shadow-purple-600/30"
+            >
+              <span>See It In Action</span>
+              <ArrowRightIcon className="w-5 h-5" />
+            </button>
+          </div>
+        </section>
+
+        <section>
+          <div className="text-center mb-12">
+            <hr className="border-t border-gray-700 w-24 mx-auto mb-4" />
+            <h2 className="text-sm font-bold text-gray-400 uppercase tracking-widest">WHAT YOU CAN ANSWER INSTANTLY</h2>
+            <hr className="border-t border-gray-700 w-24 mx-auto mt-4" />
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+            <div className="bg-[#2a2a2a] p-6 rounded-xl border border-gray-800 hover:border-gray-600 transition-colors">
+              <h3 className="font-bold text-lg mb-2">Compensation Questions</h3>
+              <p className="text-gray-400">Market rate for any role, location, level. Total comp breakdown. Equity benchmarks. Benefits trends.</p>
+            </div>
+            <div className="bg-[#2a2a2a] p-6 rounded-xl border border-gray-800 hover:border-gray-600 transition-colors">
+              <h3 className="font-bold text-lg mb-2">Competitive Landscape</h3>
+              <p className="text-gray-400">Who's hiring similar roles. Their compensation packages. Recent hires they made. Their employer brand strength.</p>
+            </div>
+             <div className="bg-[#2a2a2a] p-6 rounded-xl border border-gray-800 hover:border-gray-600 transition-colors">
+              <h3 className="font-bold text-lg mb-2">Talent Availability</h3>
+              <p className="text-gray-400">Supply/demand for specific skills. Which companies are laying off. Where talent is moving. Hot markets.</p>
+            </div>
+             <div className="bg-[#2a2a2a] p-6 rounded-xl border border-gray-800 hover:border-gray-600 transition-colors">
+              <h3 className="font-bold text-lg mb-2">Market Trends</h3>
+              <p className="text-gray-400">Emerging skills in demand. Role title evolution. Remote work impact on comp. Industry hiring patterns.</p>
+            </div>
+          </div>
+        </section>
+
+        <section>
+           <InfoCard 
+              icon={<DiamondIcon className="w-10 h-10 text-cyan-400" />}
+              title="Your Superpower"
+            >
+             <p className="text-gray-400 text-base md:text-lg leading-relaxed">
+              Hiring managers come to YOU for market insights. You walk into comp negotiations with data. You anticipate hiring challenges before they happen. You're not just a recruiter—you're a <strong className="text-cyan-300">strategic talent advisor</strong>.
+            </p>
+            </InfoCard>
+        </section>
+      </main>
+    </div>
+  );
+};
+
+const MarketIntelligenceOracleDashboardPage: React.FC<{ onNavigate: (page: string) => void }> = ({ onNavigate }) => {
+  return (
+    <div className="container mx-auto px-6 md:px-12 py-12">
+      <button onClick={() => onNavigate('market-intelligence-oracle')} className="absolute top-8 left-8 text-gray-400 hover:text-white transition-colors z-10" aria-label="Go back to feature page">
+        <BackArrowIcon className="w-6 h-6" />
+      </button>
+      
+      <header className="mb-12 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        <div>
+          <h1 className="text-3xl md:text-4xl font-black tracking-tight mb-1">Market Intelligence Oracle</h1>
+          <p className="text-md text-gray-400">Ask anything about the market</p>
+        </div>
+        <div className="bg-green-500 text-white text-sm font-bold px-4 py-2 rounded-full">
+          Live Data
+        </div>
+      </header>
+
+      <main className="flex flex-col gap-10">
+        <section className="flex flex-col items-center gap-4 w-full max-w-4xl mx-auto">
+          <div className="relative w-full">
+            <div className="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
+              <ChatBubbleIcon className="w-6 h-6 text-gray-400" />
+            </div>
+            <input 
+              type="text" 
+              placeholder="Ask me anything: 'What's market rate for Staff Engineer in SF?'"
+              className="w-full bg-[#2a2a2a] border border-gray-600 rounded-lg py-4 pl-12 pr-28 text-lg placeholder-gray-500 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition"
+            />
+            <button className="absolute inset-y-0 right-0 m-2 px-6 font-semibold bg-white text-black rounded-md hover:bg-gray-200 transition-colors">
+              Ask
+            </button>
+          </div>
+          <div className="flex flex-wrap justify-center gap-3 mt-2">
+            <button className="px-4 py-2 text-sm font-semibold border border-gray-600 rounded-full hover:bg-gray-700 hover:border-gray-500 transition-colors">Staff Engineer SF comp?</button>
+            <button className="px-4 py-2 text-sm font-semibold border border-gray-600 rounded-full hover:bg-gray-700 hover:border-gray-500 transition-colors">Who's hiring Senior PMs?</button>
+            <button className="px-4 py-2 text-sm font-semibold border border-gray-600 rounded-full hover:bg-gray-700 hover:border-gray-500 transition-colors">Remote work impact on salaries?</button>
+            <button className="px-4 py-2 text-sm font-semibold border border-gray-600 rounded-full hover:bg-gray-700 hover:border-gray-500 transition-colors">React developers available?</button>
+          </div>
+        </section>
+
+        <section className="bg-[#2a2a2a] border border-gray-700 rounded-2xl p-8 max-w-5xl mx-auto w-full">
+          <div className="flex items-center gap-4 mb-6">
+            <GradientChartIcon className="w-10 h-10 flex-shrink-0" />
+            <h2 className="text-2xl md:text-3xl font-bold">Staff Engineer - San Francisco</h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-6">
+            <div>
+              <p className="text-sm text-gray-400 uppercase font-semibold mb-1">Base Salary Range</p>
+              <p className="text-4xl md:text-5xl font-extrabold">$185K - $240K</p>
+              <p className="text-gray-400">Median: $210K</p>
+            </div>
+            <div className="relative">
+              <p className="text-sm text-gray-400 uppercase font-semibold mb-1">Total Comp (incl. equity)</p>
+              <p className="text-4xl md:text-5xl font-extrabold">$280K - $420K</p>
+              <p className="text-gray-400">Top 25%: $380K+</p>
+              <p className="absolute top-0 right-0 text-sm text-green-400 font-semibold">vs Q4 2024: +8%</p>
+            </div>
+          </div>
+
+          <div className="w-full bg-gray-700 rounded-full h-4 mb-4">
+            <div className="bg-gradient-to-r from-purple-500 to-cyan-400 h-4 rounded-full relative" style={{ marginLeft: '25%', width: '50%' }}>
+              <div className="absolute top-1/2 left-1/2 w-1 h-6 bg-white rounded-full transform -translate-x-1/2 -translate-y-1/2" title="Median"></div>
+            </div>
+          </div>
+          
+          <p className="text-xs text-gray-500 text-center">Based on 342 data points from offers, Glassdoor, LinkedIn, and verified recruiter data (last 90 days)</p>
+        </section>
+
+        <section className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-5xl mx-auto w-full">
+          <div className="bg-[#222] p-6 rounded-xl border border-gray-800">
+            <h3 className="text-xl font-bold mb-4">Top Paying Companies</h3>
+            <ul className="space-y-3">
+              <li className="flex justify-between items-center"><span className="font-semibold">Stripe</span><span className="text-gray-400">$380K - $450K</span></li>
+              <li className="flex justify-between items-center"><span className="font-semibold">OpenAI</span><span className="text-gray-400">$350K - $480K</span></li>
+              <li className="flex justify-between items-center"><span className="font-semibold">Databricks</span><span className="text-gray-400">$340K - $420K</span></li>
+              <li className="flex justify-between items-center"><span className="font-semibold">Airbnb</span><span className="text-gray-400">$320K - $400K</span></li>
+            </ul>
+          </div>
+          <div className="bg-[#222] p-6 rounded-xl border border-gray-800">
+            <h3 className="text-xl font-bold mb-4">Key Insights</h3>
+            <ul className="text-gray-400 space-y-2 list-disc list-inside">
+              <li>Comp up 8% YoY due to AI demand</li>
+              <li>Remote roles pay 15-20% less</li>
+              <li>Equity at Series B: 0.15-0.30%</li>
+              <li>Sign-on bonuses: $20-50K typical</li>
+              <li>Candidates expect 4-day weeks</li>
+            </ul>
+          </div>
+        </section>
+
+        <section className="max-w-5xl mx-auto w-full">
+          <div className="bg-yellow-900/50 border border-yellow-500/50 rounded-lg p-6 flex items-start gap-4">
+            <WarningTriangleIcon className="w-6 h-6 text-yellow-400 flex-shrink-0 mt-1" />
+            <div>
+              <h3 className="text-xl font-bold text-yellow-300 mb-1">Competitive Alert</h3>
+              <p className="text-yellow-200">5 companies in your space posted Staff Engineer roles in the last 7 days. Notable: Figma offering $400K+ total comp. Your current range may need adjustment to stay competitive.</p>
+            </div>
+          </div>
+        </section>
+
+        <section className="max-w-5xl mx-auto w-full">
+          <h3 className="text-2xl font-bold mb-6">Recent Market Movements</h3>
+          <div className="space-y-4">
+            <div className="flex items-center gap-4">
+              <span className="flex-shrink-0 text-xs font-bold bg-purple-600 text-white px-3 py-1 rounded-full">2 days ago</span>
+              <p>Meta increased Staff Engineer base range to $220-250K (was $200-230K)</p>
+            </div>
+            <div className="flex items-center gap-4">
+              <span className="flex-shrink-0 text-xs font-bold bg-green-600 text-white px-3 py-1 rounded-full">5 days ago</span>
+              <p>Anthropic posted 8 Staff Engineer roles with aggressive comp packages</p>
+            </div>
+            <div className="flex items-center gap-4">
+              <span className="flex-shrink-0 text-xs font-bold bg-rose-700 text-white px-3 py-1 rounded-full">1 week ago</span>
+              <p>Google Cloud laid off 15 Staff Engineers—potential talent available</p>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+  );
+};
+
 
 const App: React.FC = () => {
   const [page, setPage] = useState('home');
@@ -1001,6 +1265,10 @@ const App: React.FC = () => {
         return <RelationshipAutopilotPage onNavigate={navigateTo} />;
       case 'relationship-autopilot-dashboard':
         return <RelationshipAutopilotDashboardPage onNavigate={navigateTo} />;
+      case 'market-intelligence-oracle':
+        return <MarketIntelligenceOraclePage onNavigate={navigateTo} />;
+      case 'market-intelligence-oracle-dashboard':
+        return <MarketIntelligenceOracleDashboardPage onNavigate={navigateTo} />;
       case 'home':
       default:
         return <HomePage onNavigate={navigateTo} />;
@@ -1010,6 +1278,7 @@ const App: React.FC = () => {
   return (
     <div className="bg-[#1a1a1a] min-h-screen text-white antialiased overflow-x-hidden">
         {renderPage()}
+        <ScrollToTopButton />
     </div>
   );
 };
